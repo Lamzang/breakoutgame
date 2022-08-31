@@ -15,18 +15,150 @@
   <script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="text/babel">
+    const blockWidth = 100;
+    const blockHeight = 20;
+    const boardWidth = 560;
+    const userWidth = 100;
+    let userCurrentPosition = [230, 10];
+    let ballCurrentPosition = [270, 40];
+
+    let once = 0;
+
     function Score() {
       return <h1>0</h1>;
     }
 
+    function User({ left, bottom }) {
+      return (
+        <div
+          style={{
+            position: "absolute",
+            width: "100px",
+            height: "20px",
+            backgroundColor: "blueviolet",
+            left: left + "px",
+            bottom: bottom + "px",
+          }}
+        ></div>
+      );
+    }
+
+    function Ball({ left, bottom }) {
+      return (
+        <div
+          style={{
+            position: "absolute",
+            width: "20px",
+            height: "20px",
+            borderRadius: "10px",
+            backgroundColor: "red",
+            left: left + "px",
+            bottom: bottom + "px",
+          }}
+        ></div>
+      );
+    }
+
+    function PlayGround() {
+      return (
+        <div
+          style={{
+            position: "absolute",
+            width: "560px",
+            height: "300px",
+            border: "solid 1px black",
+            marginTop: "100px",
+          }}
+          id="playground"
+        >
+          <User left={userCurrentPosition[0]} bottom={userCurrentPosition[1]} />
+          <Ball left={ballCurrentPosition[0]} bottom={ballCurrentPosition[1]} />
+        </div>
+      );
+    }
+
     function App() {
       return (
-        <div>
+        <div id="app">
           <Score />
+          <PlayGround />
         </div>
       );
     }
     const root = document.querySelector("#root");
+    document.addEventListener("keydown", UserMove);
     ReactDOM.render(<App />, root);
+
+    //end of basic scaffold
+
+    //start of functions
+    //blocks
+    class Block {
+      constructor(x, y) {
+        this.topRight = [x + blockWidth, y + blockHeight];
+        this.topLeft = [x, y + blockHeight];
+        this.bottomLeft = [x, y];
+        this.bottomRight = [x + blockWidth, y];
+      }
+    }
+
+    const blockList = [
+      new Block(10, 270),
+      new Block(120, 270),
+      new Block(230, 270),
+      new Block(340, 270),
+      new Block(450, 270),
+      new Block(10, 240),
+      new Block(120, 240),
+      new Block(230, 240),
+      new Block(340, 240),
+      new Block(450, 240),
+      new Block(10, 210),
+      new Block(120, 210),
+      new Block(230, 210),
+      new Block(340, 210),
+      new Block(450, 210),
+    ];
+
+    function DrawBlockObject() {
+      for (let i = 0; i < blockList.length; i++) {
+        const block = document.createElement("div");
+        const superObj = document.querySelector("#playground");
+        block.classList.add("block");
+        block.style.left = blockList[i].bottomLeft[0] + "px";
+        block.style.bottom = blockList[i].bottomLeft[1] + "px";
+        superObj.appendChild(block);
+      }
+    }
+
+    DrawBlockObject();
+
+    //user
+    function UserMove(event) {
+      switch (event.key) {
+        case "ArrowLeft":
+          if (userCurrentPosition[0] > 0) {
+            userCurrentPosition[0] -= 10;
+            ReactDOM.render(<App />, root);
+          }
+          break;
+        case "ArrowRight":
+          if (userCurrentPosition[0] < boardWidth - userWidth) {
+            userCurrentPosition[0] += 10;
+            ReactDOM.render(<App />, root);
+          }
+          break;
+      }
+    }
+
+    /**
+    우선 React를 연습하기 위해 하는 것일텐데
+    정작 React의 기능을 거의 사용못함
+    따라서 keydown에 의해 움직이는 것이 아니라 다른 component에 의해 움직이는
+    새로운 방식의 breakout game을 만들어서 React를 적용해보자
+    우선ReactDOM을 무분별하게 사용하는 것은 진짜 아닌듯
+    심지어 기존에는 css를 사용해서 움직였는데, 지금은 굳이 ReactDOM을 사용해서
+    메모리가 더 심해짐 
+    **/
   </script>
 </html>

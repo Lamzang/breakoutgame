@@ -8,3 +8,6 @@ body{
     height: 20px;
     background-color: aqua;
 }
+.dragging{
+    cursor: grab;
+}

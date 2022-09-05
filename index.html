@@ -21,6 +21,7 @@
     const userWidth = 100;
     let userCurrentPosition = [230, 10];
     let ballCurrentPosition = [270, 40];
+    let memory = [230];
 
     let once = 0;
 
@@ -37,7 +38,7 @@
             width: "100px",
             height: "20px",
             backgroundColor: "blueviolet",
-            left: "230px",
+            left: userCurrentPosition[0],
             bottom: "10px",
           }}
         ></div>
@@ -61,18 +62,18 @@
       );
     }
 
-    function BigDiv() {
-      return (
-        <div>
-          <MovingDiv />
-          <RightDiv />
-        </div>
-      );
-    }
-
     function MovingDiv() {
-      const move = (e) => {
-        1;
+      const handleDragStart = (event) => {
+        console.log(event);
+      };
+      const handleDrag = (event) => {
+        memory.push(event.clientX);
+        userCurrentPosition[0] = memory[memory.length - 2];
+        ReactDOM.render(<App />, root);
+      };
+      const handleDragEnd = (event) => {
+        memory.pop();
+        memory.splice(0, memory.length - 1);
       };
       return (
         <div
@@ -81,26 +82,17 @@
             width: "50px",
             height: "50px",
             border: "solid 1px black",
-            left: "50px",
+            left: userCurrentPosition[0],
+            background: "white",
+            cursor: "grab",
           }}
-          onDrag={move}
-        ></div>
-      );
-    }
-    function RightDiv() {
-      const entered = (e) => {
-        console.log(e);
-      };
-      return (
-        <div
-          style={{
-            position: "absolute",
-            width: "150px",
-            height: "150px",
-            left: "151px",
-          }}
-          onDragEnter={entered}
-        ></div>
+          onDragStart={handleDragStart}
+          onDrag={handleDrag}
+          onDragEnd={handleDragEnd}
+          draggable="true"
+        >
+          drag
+        </div>
       );
     }
 
@@ -127,7 +119,7 @@
         <div id="app">
           <Score />
           <PlayGround />
-          <BigDiv />
+          <MovingDiv />
         </div>
       );
     }

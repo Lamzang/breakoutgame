@@ -65,6 +65,7 @@
     function MovingDiv() {
       const handleDragStart = (event) => {
         console.log(event);
+        /*https://developer.mozilla.org/ko/docs/Web/API/HTML_Drag_and_Drop_API/Drag_operations#%EB%93%9C%EB%9E%98%EA%B7%B8_%ED%94%BC%EB%93%9C%EB%B0%B1_%EC%9D%B4%EB%AF%B8%EC%A7%80_%EC%84%A4%EC%A0%95*/
       };
       const handleDrag = (event) => {
         memory.push(event.clientX);
@@ -79,20 +80,19 @@
         <div
           style={{
             position: "absolute",
-            width: "50px",
-            height: "50px",
+            width: "100px",
+            height: "30px",
             border: "solid 1px black",
             left: userCurrentPosition[0],
             background: "white",
             cursor: "grab",
+            marginTop: "330px",
           }}
           onDragStart={handleDragStart}
           onDrag={handleDrag}
           onDragEnd={handleDragEnd}
           draggable="true"
-        >
-          drag
-        </div>
+        ></div>
       );
     }
 
@@ -104,7 +104,7 @@
             width: "560px",
             height: "300px",
             border: "solid 1px black",
-            marginTop: "100px",
+            marginTop: "0px",
           }}
           id="playground"
         >

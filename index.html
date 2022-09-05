@@ -28,33 +28,78 @@
       return <h1>0</h1>;
     }
 
-    function User({ left, bottom }) {
+    function User() {
       return (
         <div
+          id="userID"
           style={{
             position: "absolute",
             width: "100px",
             height: "20px",
             backgroundColor: "blueviolet",
-            left: left + "px",
-            bottom: bottom + "px",
+            left: "230px",
+            bottom: "10px",
           }}
         ></div>
       );
     }
 
-    function Ball({ left, bottom }) {
+    function Ball() {
       return (
         <div
+          id="ballID"
           style={{
             position: "absolute",
             width: "20px",
             height: "20px",
             borderRadius: "10px",
             backgroundColor: "red",
-            left: left + "px",
-            bottom: bottom + "px",
+            left: "270px",
+            bottom: "40px",
           }}
+        ></div>
+      );
+    }
+
+    function BigDiv() {
+      return (
+        <div>
+          <MovingDiv />
+          <RightDiv />
+        </div>
+      );
+    }
+
+    function MovingDiv() {
+      const move = (e) => {
+        1;
+      };
+      return (
+        <div
+          style={{
+            position: "absolute",
+            width: "50px",
+            height: "50px",
+            border: "solid 1px black",
+            left: "50px",
+          }}
+          onDrag={move}
+        ></div>
+      );
+    }
+    function RightDiv() {
+      const entered = (e) => {
+        console.log(e);
+      };
+      return (
+        <div
+          style={{
+            position: "absolute",
+            width: "150px",
+            height: "150px",
+            left: "151px",
+          }}
+          onDragEnter={entered}
         ></div>
       );
     }
@@ -71,8 +116,8 @@
           }}
           id="playground"
         >
-          <User left={userCurrentPosition[0]} bottom={userCurrentPosition[1]} />
-          <Ball left={ballCurrentPosition[0]} bottom={ballCurrentPosition[1]} />
+          <User />
+          <Ball />
         </div>
       );
     }
@@ -82,11 +127,11 @@
         <div id="app">
           <Score />
           <PlayGround />
+          <BigDiv />
         </div>
       );
     }
     const root = document.querySelector("#root");
-    document.addEventListener("keydown", UserMove);
     ReactDOM.render(<App />, root);
 
     //end of basic scaffold
@@ -133,24 +178,6 @@
 
     DrawBlockObject();
 
-    //user
-    function UserMove(event) {
-      switch (event.key) {
-        case "ArrowLeft":
-          if (userCurrentPosition[0] > 0) {
-            userCurrentPosition[0] -= 10;
-            ReactDOM.render(<App />, root);
-          }
-          break;
-        case "ArrowRight":
-          if (userCurrentPosition[0] < boardWidth - userWidth) {
-            userCurrentPosition[0] += 10;
-            ReactDOM.render(<App />, root);
-          }
-          break;
-      }
-    }
-
     /**
     우선 React를 연습하기 위해 하는 것일텐데
     정작 React의 기능을 거의 사용못함
@@ -158,7 +185,7 @@
     새로운 방식의 breakout game을 만들어서 React를 적용해보자
     우선ReactDOM을 무분별하게 사용하는 것은 진짜 아닌듯
     심지어 기존에는 css를 사용해서 움직였는데, 지금은 굳이 ReactDOM을 사용해서
-    메모리가 더 심해짐 
+    메모리가 더 심해짐
     **/
   </script>
 </html>

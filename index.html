@@ -217,14 +217,35 @@
         changeDirection();
       }
 
-      //user collision
+      //user left collision
       if (
         ballCurrentPosition[0] > userCurrentPosition[0] &&
-        ballCurrentPosition[0] < userCurrentPosition[0] + blockWidth &&
+        ballCurrentPosition[0] < userCurrentPosition[0] + 25 &&
         ballCurrentPosition[1] > userCurrentPosition[1] &&
-        ballCurrentPosition[1] < userCurrentPosition[1] + blockHeight
+        ballCurrentPosition[1] < userCurrentPosition[1] + 20
+      ) {
+        changeDirection(-0.5);
+        console.log(xDirec);
+      }
+      //user center collision
+      if (
+        ballCurrentPosition[0] >= userCurrentPosition[0] + 25 &&
+        ballCurrentPosition[0] < userCurrentPosition[0] + 75 &&
+        ballCurrentPosition[1] > userCurrentPosition[1] &&
+        ballCurrentPosition[1] < userCurrentPosition[1] + 20
       ) {
         changeDirection();
+        console.log(xDirec);
+      }
+      //user rigth collision
+      if (
+        ballCurrentPosition[0] >= userCurrentPosition[0] + 75 &&
+        ballCurrentPosition[0] < userCurrentPosition[0] + 100 &&
+        ballCurrentPosition[1] > userCurrentPosition[1] &&
+        ballCurrentPosition[1] < userCurrentPosition[1] + 20
+      ) {
+        changeDirection(0.5);
+        console.log(xDirec);
       }
 
       //game end
@@ -236,21 +257,25 @@
       }
     }
 
-    function changeDirection() {
+    function changeDirection(add = 0) {
       if (xDirec >= 0 && yDirec >= 0) {
         yDirec = -yDirec;
+        xDirec += add;
         return;
       }
       if (xDirec >= 0 && yDirec < 0) {
         xDirec = -xDirec;
+
         return;
       }
       if (xDirec < 0 && yDirec < 0) {
         yDirec = -yDirec;
+        xDirec += add;
         return;
       }
       if (xDirec < 0 && yDirec >= 0) {
         xDirec = -xDirec;
+
         return;
       }
     }

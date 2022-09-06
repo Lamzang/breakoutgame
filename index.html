@@ -18,10 +18,16 @@
     const blockWidth = 100;
     const blockHeight = 20;
     const boardWidth = 560;
+    const boardHeight = 300;
     const userWidth = 100;
+    const ballDiameter = 20;
     let userCurrentPosition = [230, 10];
     let ballCurrentPosition = [270, 40];
+    let xDirec = -2;
+    let yDirec = 2;
     let memory = [230];
+    let turnStart = 0;
+    let timer;
 
     let once = 0;
 
@@ -55,8 +61,8 @@
             height: "20px",
             borderRadius: "10px",
             backgroundColor: "red",
-            left: "270px",
-            bottom: "40px",
+            left: ballCurrentPosition[0],
+            bottom: ballCurrentPosition[1],
           }}
         ></div>
       );
@@ -114,10 +120,19 @@
       );
     }
 
+    function Start() {
+      const gamestart = () => {
+        console.log("gamestart");
+        turnStart = 1;
+      };
+      return <button onClick={gamestart}>Start!</button>;
+    }
+
     function App() {
       return (
         <div id="app">
           <Score />
+          <Start />
           <PlayGround />
           <MovingDiv />
         </div>
@@ -168,16 +183,75 @@
       }
     }
 
-    DrawBlockObject();
+    function moveBall() {
+      ballCurrentPosition[0] += xDirec;
+      ballCurrentPosition[1] -= yDirec;
+      checkForCollision();
+      ReactDOM.render(<App />, root);
+    }
 
-    /**
-    우선 React를 연습하기 위해 하는 것일텐데
-    정작 React의 기능을 거의 사용못함
-    따라서 keydown에 의해 움직이는 것이 아니라 다른 component에 의해 움직이는
-    새로운 방식의 breakout game을 만들어서 React를 적용해보자
-    우선ReactDOM을 무분별하게 사용하는 것은 진짜 아닌듯
-    심지어 기존에는 css를 사용해서 움직였는데, 지금은 굳이 ReactDOM을 사용해서
-    메모리가 더 심해짐
-    **/
+    function checkForCollision() {
+      console.log("collision");
+
+      for (let i = 0; i < blockList.length; i++) {
+        if (
+          ballCurrentPosition[0] > blockList[i].bottomLeft[0] &&
+          ballCurrentPosition[0] < blockList[i].bottomRight[0] &&
+          ballCurrentPosition[1] + ballDiameter > blockList[i].bottomLeft[1] &&
+          ballCurrentPosition[1] < blockList[i].topLeft[1]
+        ) {
+          const allBlocks = Array.from(document.querySelectorAll(".block"));
+          allBlocks[i].classList.remove("block");
+          blockList.splice(i, 1);
+          changeDirection();
+          if (blockList.length === 0) {
+            clearInterval(timer);
+          }
+        }
+      }
+
+      if (
+        ballCurrentPosition[0] >= boardWidth - ballDiameter ||
+        ballCurrentPosition[0] <= 0 ||
+        ballCurrentPosition[1] >= boardHeight - ballDiameter
+      ) {
+        changeDirection();
+      }
+
+      if (
+        ballCurrentPosition[0] > userCurrentPosition[0] &&
+        ballCurrentPosition[0] < userCurrentPosition[0] + blockWidth &&
+        ballCurrentPosition[1] > userCurrentPosition[1] &&
+        ballCurrentPosition[1] < userCurrentPosition[1] + blockHeight
+      ) {
+        changeDirection();
+      }
+
+      if (ballCurrentPosition[1] <= 0) {
+        clearInterval(timer);
+      }
+    }
+
+    function changeDirection() {
+      if (xDirec === 2 && yDirec === 2) {
+        yDirec = -2;
+        return;
+      }
+      if (xDirec === 2 && yDirec === -2) {
+        xDirec = -2;
+        return;
+      }
+      if (xDirec === -2 && yDirec === -2) {
+        yDirec = 2;
+        return;
+      }
+      if (xDirec === -2 && yDirec === 2) {
+        xDirec = 2;
+        return;
+      }
+    }
+
+    DrawBlockObject();
+    timer = setInterval(moveBall, 30);
   </script>
 </html>

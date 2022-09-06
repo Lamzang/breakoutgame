@@ -70,7 +70,6 @@
 
     function MovingDiv() {
       const handleDragStart = (event) => {
-        console.log(event);
         /*https://developer.mozilla.org/ko/docs/Web/API/HTML_Drag_and_Drop_API/Drag_operations#%EB%93%9C%EB%9E%98%EA%B7%B8_%ED%94%BC%EB%93%9C%EB%B0%B1_%EC%9D%B4%EB%AF%B8%EC%A7%80_%EC%84%A4%EC%A0%95*/
       };
       const handleDrag = (event) => {
@@ -191,25 +190,25 @@
     }
 
     function checkForCollision() {
-      console.log("collision");
-
-      for (let i = 0; i < blockList.length; i++) {
-        if (
-          ballCurrentPosition[0] > blockList[i].bottomLeft[0] &&
-          ballCurrentPosition[0] < blockList[i].bottomRight[0] &&
-          ballCurrentPosition[1] + ballDiameter > blockList[i].bottomLeft[1] &&
-          ballCurrentPosition[1] < blockList[i].topLeft[1]
-        ) {
-          const allBlocks = Array.from(document.querySelectorAll(".block"));
-          allBlocks[i].classList.remove("block");
-          blockList.splice(i, 1);
-          changeDirection();
-          if (blockList.length === 0) {
-            clearInterval(timer);
+      //block collision
+      if (ballCurrentPosition[1] >= 190) {
+        for (let i = 0; i < blockList.length; i++) {
+          if (
+            ballCurrentPosition[0] > blockList[i].bottomLeft[0] &&
+            ballCurrentPosition[0] < blockList[i].bottomRight[0] &&
+            ballCurrentPosition[1] + ballDiameter >
+              blockList[i].bottomLeft[1] &&
+            ballCurrentPosition[1] < blockList[i].topLeft[1]
+          ) {
+            const allBlocks = Array.from(document.querySelectorAll(".block"));
+            allBlocks[i].classList.remove("block");
+            blockList.splice(i, 1);
+            changeDirection();
           }
         }
       }
 
+      //wall collision
       if (
         ballCurrentPosition[0] >= boardWidth - ballDiameter ||
         ballCurrentPosition[0] <= 0 ||
@@ -218,6 +217,7 @@
         changeDirection();
       }
 
+      //user collision
       if (
         ballCurrentPosition[0] > userCurrentPosition[0] &&
         ballCurrentPosition[0] < userCurrentPosition[0] + blockWidth &&
@@ -227,26 +227,30 @@
         changeDirection();
       }
 
+      //game end
+      if (blockList.length === 0) {
+        clearInterval(timer);
+      }
       if (ballCurrentPosition[1] <= 0) {
         clearInterval(timer);
       }
     }
 
     function changeDirection() {
-      if (xDirec === 2 && yDirec === 2) {
-        yDirec = -2;
+      if (xDirec >= 0 && yDirec >= 0) {
+        yDirec = -yDirec;
         return;
       }
-      if (xDirec === 2 && yDirec === -2) {
-        xDirec = -2;
+      if (xDirec >= 0 && yDirec < 0) {
+        xDirec = -xDirec;
         return;
       }
-      if (xDirec === -2 && yDirec === -2) {
-        yDirec = 2;
+      if (xDirec < 0 && yDirec < 0) {
+        yDirec = -yDirec;
         return;
       }
-      if (xDirec === -2 && yDirec === 2) {
-        xDirec = 2;
+      if (xDirec < 0 && yDirec >= 0) {
+        xDirec = -xDirec;
         return;
       }
     }
